@@ -5,7 +5,10 @@ import { Locales, ScreenInfo, styles } from '@/lib'
 
 const AthleteProfiles = () => (
   <Surface style={styles.screen}>
-    <ScreenInfo title={Locales.t('athleteProfiles')} path="app/(tabs)/athleteProfiles.tsx" />
+    <ScreenInfo
+      title={Locales.t('athleteProfiles')}
+      path="app/(tabs)/athleteProfiles.tsx"
+    />
   </Surface>
 )
 

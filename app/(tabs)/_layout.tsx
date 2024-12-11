@@ -70,7 +70,11 @@ const TabLayout = () => {
             <MaterialCommunityIcons
               {...props}
               size={24}
-              name={props.focused ? 'calculator-variant' : 'calculator-variant-outline'}
+              name={
+                props.focused
+                  ? 'calculator-variant'
+                  : 'calculator-variant-outline'
+              }
             />
           ),
         }}
