@@ -12,8 +12,46 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 16,
     padding: 32,
+  },
+  inputsContainer: {
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  input: {
+    marginBottom: 15,
+    backgroundColor: 'transparent',
+  },
+  cardTitle: {
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 10,
+  },
+  resultsCard: {
+    marginTop: 20,
+    borderRadius: 10,
+  },
+  resultRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    justifyContent: 'center',
+    paddingVertical: 8,
+  },
+  resultDistance: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  resultTime: {
+    fontSize: 16,
+    textAlign: 'right',
+  },
+  divider: {
+    marginVertical: 4,
+  },
+  placeholder: {
+    textAlign: 'center',
+    color: '#aaa',
+    marginTop: 10,
   },
 })
 
