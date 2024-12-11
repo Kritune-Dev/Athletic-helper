@@ -3,10 +3,10 @@ import { Surface } from 'react-native-paper'
 
 import { Locales, ScreenInfo, styles } from '@/lib'
 
-const DrawerHome = () => (
+const AthleteProfiles = () => (
   <Surface style={styles.screen}>
-    <ScreenInfo title={Locales.t('titleHome')} path="app/drawer/index.tsx" />
+    <ScreenInfo title={Locales.t('athleteProfiles')} path="app/(tabs)/athleteProfiles.tsx" />
   </Surface>
 )
 
-export default DrawerHome
+export default AthleteProfiles

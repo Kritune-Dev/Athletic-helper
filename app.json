@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "expo-react-native-paper",
-    "slug": "expo-react-native-paper",
+    "name": "Athlétisme Helper",
+    "slug": "athletic-helper",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

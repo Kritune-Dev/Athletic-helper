@@ -5,7 +5,8 @@
 const English = {
   login: 'Log in',
   signup: 'Sign up',
-  profile: 'Profile',
+  paceCalculator: 'Pace Calculator',
+  athleteProfiles: 'Athlete Profiles',
   options: 'Options',
   search: 'Search',
   stackNav: 'Stack Navigation',

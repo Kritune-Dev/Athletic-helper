@@ -22,12 +22,6 @@ const TabLayout = () => {
           title: Locales.t('titleHome'),
           headerRight: () => (
             <>
-              <Tooltip title={Locales.t('search')}>
-                <Appbar.Action
-                  icon="magnify"
-                  onPress={() => router.push('/search')}
-                />
-              </Tooltip>
               <Menu
                 statusBarHeight={48}
                 visible={visible}
@@ -44,17 +38,7 @@ const TabLayout = () => {
                 <Menu.Item
                   title={Locales.t('titleSettings')}
                   leadingIcon="cog"
-                  onPress={() => router.push('/(tabs)/settings')}
-                />
-                <Menu.Item
-                  title={Locales.t('stackNav')}
-                  leadingIcon="card-multiple-outline"
-                  onPress={() => router.push('/modal')}
-                />
-                <Menu.Item
-                  title={Locales.t('drawerNav')}
-                  leadingIcon="gesture-swipe"
-                  onPress={() => router.push('/drawer')}
+                  onPress={() => router.push('/settings')}
                 />
               </Menu>
             </>
@@ -69,21 +53,15 @@ const TabLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="paceCalculator"
         options={{
-          title: Locales.t('profile'),
+          title: Locales.t('paceCalculator'),
           headerRight: () => (
             <>
-              <Tooltip title={Locales.t('search')}>
-                <Appbar.Action
-                  icon="magnify"
-                  onPress={() => router.push('/search')}
-                />
-              </Tooltip>
               <Tooltip title={Locales.t('titleSettings')}>
                 <Appbar.Action
                   icon="cog"
-                  onPress={() => router.push('/(tabs)/settings')}
+                  onPress={() => router.push('/settings')}
                 />
               </Tooltip>
             </>
@@ -92,28 +70,30 @@ const TabLayout = () => {
             <MaterialCommunityIcons
               {...props}
               size={24}
-              name={props.focused ? 'account' : 'account-outline'}
+              name={props.focused ? 'calculator-variant' : 'calculator-variant-outline'}
             />
           ),
         }}
       />
       <Tabs.Screen
-        name="settings"
+        name="athleteProfiles"
         options={{
-          title: Locales.t('titleSettings'),
+          title: Locales.t('athleteProfiles'),
           headerRight: () => (
-            <Tooltip title={Locales.t('drawerNav')}>
-              <Appbar.Action
-                icon="gesture-swipe"
-                onPress={() => router.push('/drawer')}
-              />
-            </Tooltip>
+            <>
+              <Tooltip title={Locales.t('titleSettings')}>
+                <Appbar.Action
+                  icon="cog"
+                  onPress={() => router.push('/settings')}
+                />
+              </Tooltip>
+            </>
           ),
           tabBarIcon: (props) => (
             <MaterialCommunityIcons
               {...props}
               size={24}
-              name={props.focused ? 'cog' : 'cog-outline'}
+              name={props.focused ? 'run-fast' : 'run'}
             />
           ),
         }}
