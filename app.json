@@ -13,15 +13,22 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "ExpoLocalization_supportsRTL": true
+      },
+      "bundleIdentifier": "com.kritunedev.athletichelper"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.kritunedev.athletichelper"
     },
     "web": {
       "bundler": "metro",
@@ -38,7 +45,14 @@
       "typedRoutes": true
     },
     "extra": {
-      "supportsRTL": true
-    }
+      "supportsRTL": true,
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "7eff8e02-9172-4f67-9f0e-2c9bae72b988"
+      }
+    },
+    "owner": "kritune-dev"
   }
 }

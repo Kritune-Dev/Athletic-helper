@@ -8,6 +8,7 @@ const French = {
   paceCalculator: "Calculateur d'allures",
   athleteProfiles: 'Fiches Athlètes',
   options: 'Options',
+  doneKeyboard: 'Ok',
   search: 'Rechercher',
   pace: 'Allure (secondes)',
   distance: 'Distance (mètres)',
