@@ -34,6 +34,7 @@ const French = {
   screen404: "Cet écran n'existe pas",
   titleHome: 'Accueil',
   titleModal: 'Modal',
+  titleFavorite: 'Athlètes favoris',
   titleNotFound: 'Non trouvé',
   titleSettings: 'Paramètres',
   restartApp: "Redémarrez l'application pour appliquer les modifications",

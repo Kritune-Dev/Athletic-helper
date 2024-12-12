@@ -1,17 +1,127 @@
+import { useLocalSearchParams, useNavigation } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import React from 'react'
-import { Platform } from 'react-native'
-import { Surface } from 'react-native-paper'
+import React, { useEffect, useState } from 'react'
+import { Platform, View, StyleSheet, TouchableOpacity } from 'react-native'
+import { Text } from 'react-native-paper'
+import WebView from 'react-native-webview'
 
-import { Locales, ScreenInfo, styles } from '@/lib'
+import {
+  addFavorite,
+  isFavorite,
+  removeFavorite,
+} from '@/lib/services/favoriteService'
 
-const Modal = () => (
-  <Surface style={styles.screen}>
-    <ScreenInfo title={Locales.t('titleModal')} path="app/modal.tsx" />
+const Modal = () => {
+  const { url } = useLocalSearchParams()
+  const [athleteName, setAthleteName] = useState<string | null>(null)
+  const [isFavoriteState, setIsFavoriteState] = useState(false)
+  const navigation = useNavigation()
 
-    {/* Use a light status bar on iOS to account for the black space above the modal */}
-    <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-  </Surface>
-)
+  const urlString = typeof url === 'string' ? url : ''
+
+  const toTitleCase = (str: string) => {
+    return str
+      .toLowerCase()
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
+  }
+
+  const injectedJavaScript = `
+    (function() {
+      const nameElement = document.querySelector('#ctnMainDetails .titles span');
+      const athleteName = nameElement ? nameElement.innerText.trim() : 'Nom non trouvé';
+      window.ReactNativeWebView.postMessage(athleteName);
+    })();
+  `
+
+  const onMessage = (event: any) => {
+    const name = event.nativeEvent.data
+    setAthleteName(toTitleCase(name))
+  }
+
+  useEffect(() => {
+    const checkFavoriteStatus = async () => {
+      if (urlString) {
+        const status = await isFavorite(urlString)
+        setIsFavoriteState(status)
+      }
+    }
+    checkFavoriteStatus()
+  }, [urlString])
+
+  useEffect(() => {
+    if (athleteName) {
+      navigation.setOptions({
+        title: athleteName,
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={handleToggleFavorite}
+            style={styles.favoriteButton}
+          >
+            <Text
+              style={[styles.starIcon, isFavoriteState && styles.activeStar]}
+            >
+              {isFavoriteState ? '★' : '☆'}
+            </Text>
+          </TouchableOpacity>
+        ),
+      })
+    }
+  }, [athleteName, isFavoriteState, navigation])
+
+  const handleToggleFavorite = async () => {
+    if (urlString && athleteName) {
+      if (isFavoriteState) {
+        await removeFavorite(urlString)
+      } else {
+        await addFavorite({ name: athleteName, url: urlString })
+      }
+      setIsFavoriteState(!isFavoriteState)
+    }
+  }
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.webviewContainer}>
+        {urlString && (
+          <WebView
+            style={styles.modalWebview}
+            source={{ uri: urlString }}
+            injectedJavaScript={injectedJavaScript}
+            onMessage={onMessage}
+          />
+        )}
+        <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+      </View>
+    </View>
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  webviewContainer: {
+    flex: 1,
+    overflow: 'hidden',
+  },
+  modalWebview: {
+    flex: 1,
+    marginTop: 5,
+  },
+  favoriteButton: {
+    paddingHorizontal: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  starIcon: {
+    fontSize: 24, // Taille ajustée de l'étoile
+    color: 'gray',
+  },
+  activeStar: {
+    color: '#FFD700', // Couleur dorée pour l'étoile active
+  },
+})
 
 export default Modal

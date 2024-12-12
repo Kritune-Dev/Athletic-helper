@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { View, ScrollView, Keyboard } from 'react-native'
+import { View, ScrollView } from 'react-native'
 import { Surface, TextInput, Text, Card, Divider } from 'react-native-paper'
 
 import { Locales, styles } from '@/lib'
@@ -66,12 +66,12 @@ const PaceCalculator = () => {
   }, [calculatePace])
 
   const handleChangePace = (value: string) => {
-    setPace(value.replace(',', '.'));  // Remplacer la virgule par un point
-  };
-  
+    setPace(value.replace(',', '.')) // Remplacer la virgule par un point
+  }
+
   const handleChangeDistance = (value: string) => {
-    setDistance(value.replace(',', '.'));  // Remplacer la virgule par un point
-  };
+    setDistance(value.replace(',', '.')) // Remplacer la virgule par un point
+  }
 
   return (
     <Surface style={styles.screen}>
@@ -81,7 +81,7 @@ const PaceCalculator = () => {
           value={distance}
           onChangeText={handleChangeDistance}
           keyboardType="numeric"
-          returnKeyType='done'
+          returnKeyType="done"
           mode="flat"
           left={<TextInput.Icon icon="ruler" />}
           style={styles.input}
@@ -92,7 +92,7 @@ const PaceCalculator = () => {
           value={pace}
           onChangeText={handleChangePace}
           keyboardType="numeric"
-          returnKeyType='done'
+          returnKeyType="done"
           mode="flat"
           left={<TextInput.Icon icon="run" />}
           style={styles.input}
