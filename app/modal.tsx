@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useNavigation } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Platform, View, StyleSheet, TouchableOpacity } from 'react-native'
 import { Text } from 'react-native-paper'
 import WebView from 'react-native-webview'
@@ -50,6 +50,17 @@ const Modal = () => {
     checkFavoriteStatus()
   }, [urlString])
 
+  const handleToggleFavorite = useCallback(async () => {
+    if (urlString && athleteName) {
+      if (isFavoriteState) {
+        await removeFavorite(urlString)
+      } else {
+        await addFavorite({ name: athleteName, url: urlString })
+      }
+      setIsFavoriteState(!isFavoriteState)
+    }
+  }, [athleteName, urlString, isFavoriteState])
+
   useEffect(() => {
     if (athleteName) {
       navigation.setOptions({
@@ -68,18 +79,7 @@ const Modal = () => {
         ),
       })
     }
-  }, [athleteName, isFavoriteState, navigation])
-
-  const handleToggleFavorite = async () => {
-    if (urlString && athleteName) {
-      if (isFavoriteState) {
-        await removeFavorite(urlString)
-      } else {
-        await addFavorite({ name: athleteName, url: urlString })
-      }
-      setIsFavoriteState(!isFavoriteState)
-    }
-  }
+  }, [athleteName, isFavoriteState, navigation, handleToggleFavorite])
 
   return (
     <View style={styles.container}>

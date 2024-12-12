@@ -25,6 +25,7 @@ const French = {
   lightMode: 'Clair',
   darkMode: 'Sombre',
   color: 'Couleur',
+  favorite: 'Voir les favoris',
   changeColor: 'Changer la couleur du thème',
   changeScreenCode:
     'Modifiez n’importe quel texte, sauvegardez le fichier et votre application sera automatiquement mise à jour',

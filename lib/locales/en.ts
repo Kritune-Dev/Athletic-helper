@@ -25,6 +25,7 @@ const English = {
   lightMode: 'Light',
   darkMode: 'Dark',
   color: 'Color',
+  favorite: 'Favorite',
   changeColor: 'Change theme color',
   changeScreenCode:
     'Change any of the text, save the file, and your app will automatically update',

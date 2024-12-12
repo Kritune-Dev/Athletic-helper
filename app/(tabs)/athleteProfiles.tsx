@@ -1,3 +1,4 @@
+import { Locales } from '@/lib'
 import { router } from 'expo-router'
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
@@ -38,7 +39,7 @@ const AthleteProfiles = () => {
         }}
       >
         <Button mode="contained" onPress={() => router.push('/favorite')}>
-          Favorite
+          {Locales.t('favorite')}
         </Button>
       </Surface>
     </View>

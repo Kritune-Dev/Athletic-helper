@@ -269,13 +269,6 @@ const Settings = () => {
         </Surface>
       )}
 
-      <Surface elevation={0} style={styles.screen}>
-        <ScreenInfo
-          title={Locales.t('titleSettings')}
-          path="app/settings.tsx"
-        />
-      </Surface>
-
       <Button
         mode="contained"
         style={{ margin: 16 }}
