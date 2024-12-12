@@ -1,14 +1,20 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { Button, IconButton, Text } from 'react-native-paper'
+import { Button, Card, IconButton, Text } from 'react-native-paper'
 
 const Starting = () => {
-  const hasCameraPermission = false // Replace with actual camera permission logic
+  const hasCameraPermission = true // Replace with actual camera permission logic
 
   return (
     <View style={styles.screen}>
       {/* Camera Section */}
-      <View style={styles.cameraSection}>
+      <View
+        style={
+          hasCameraPermission
+            ? styles.cameraSection
+            : styles.cameraDisabledSection
+        }
+      >
         {hasCameraPermission ? (
           <View style={styles.cameraContainer}>
             <Text style={styles.cameraPlaceholder}>Camera View</Text>
@@ -26,33 +32,39 @@ const Starting = () => {
       </View>
 
       {/* Starting Section */}
-      <View style={styles.startingSection}>
+      <Card style={styles.startingSection}>
         <View style={styles.startingRow}>
           <View style={styles.startingElement}>
             <IconButton icon="flag" size={24} onPress={() => {}} />
             <Text>Marks</Text>
           </View>
           <View style={styles.arrowContainer}>
-            <Text style={styles.arrowTime}>5s</Text>
-            <Text style={styles.arrow}>→</Text>
+            <Text style={styles.arrowTime}>5 sec</Text>
+            <IconButton icon="arrow-right" size={32} onPress={() => {}} />
           </View>
           <View style={styles.startingElement}>
             <IconButton icon="run" size={24} onPress={() => {}} />
             <Text>Set</Text>
           </View>
           <View style={styles.arrowContainer}>
-            <Text style={styles.arrowTime}>5s</Text>
-            <Text style={styles.arrow}>→</Text>
+            <Text style={styles.arrowTime}>5 sec</Text>
+            <IconButton icon="arrow-right" size={32} onPress={() => {}} />
           </View>
           <View style={styles.startingElement}>
             <IconButton icon="pistol" size={24} onPress={() => {}} />
-            <Text style={styles.goText}>Go</Text>
+            <Text>Go</Text>
           </View>
         </View>
-        <Button mode="contained" onPress={() => {}}>
-          Lancer procédure de départ
-        </Button>
-      </View>
+      </Card>
+      {/* Start Button */}
+      <Button
+        mode="contained"
+        onPress={() => console.log('Go')}
+        style={styles.startButton}
+        contentStyle={styles.startButtonContent}
+      >
+        Lancer procédure de départ
+      </Button>
     </View>
   )
 }
@@ -63,6 +75,9 @@ const styles = StyleSheet.create({
   },
   cameraSection: {
     flex: 1,
+  },
+  cameraDisabledSection: {
+    flex: 1 / 6,
   },
   cameraContainer: {
     flex: 1,
@@ -82,7 +97,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cameraDisabledContainer: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ddd',
@@ -93,8 +107,9 @@ const styles = StyleSheet.create({
     color: '#888',
   },
   startingSection: {
-    flex: 1,
-    justifyContent: 'space-evenly',
+    flex: 5 / 6,
+    justifyContent: 'center',
+    alignContent: 'center',
     padding: 16,
   },
   startingRow: {
@@ -112,21 +127,16 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   arrowTime: {
-    fontSize: 12,
-    color: '#555',
-  },
-  arrow: {
-    fontSize: 24,
-    color: '#000',
-  },
-  goText: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: 'bold',
-    marginHorizontal: 8,
+    textAlign: 'center',
   },
-  divider: {
-    marginVertical: 4,
-    backgroundColor: 'red',
+  startButton: {
+    height: '12.5%', // 1/8 of the screen
+    justifyContent: 'center',
+  },
+  startButtonContent: {
+    height: '100%', // Ensures the button content fills its height
   },
 })
 
