@@ -47,7 +47,7 @@ const TabLayout = () => {
             <MaterialCommunityIcons
               {...props}
               size={24}
-              name={props.focused ? 'home' : 'home-outline'}
+              name={props.focused ? 'pistol' : 'pistol'}
             />
           ),
         }}

@@ -11,7 +11,8 @@
     "lint": "eslint . --fix",
     "expo:fix": "expo install --fix",
     "expo:lint": "expo lint",
-    "format": "prettier -w ."
+    "format": "prettier -w .",
+    "build:ios": "eas build --profile preview --platform ios"
   },
   "jest": {
     "preset": "jest-expo"

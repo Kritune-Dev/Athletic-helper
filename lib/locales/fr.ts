@@ -33,7 +33,7 @@ const French = {
   openScreenCode: 'Ouvrir le code de cet écran',
   save: 'Sauvegarder',
   screen404: "Cet écran n'existe pas",
-  titleHome: 'Accueil',
+  titleHome: 'Départ',
   titleModal: 'Modal',
   titleFavorite: 'Athlètes favoris',
   titleNotFound: 'Non trouvé',

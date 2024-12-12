@@ -33,7 +33,7 @@ const English = {
   openScreenCode: 'Open up the code for this screen',
   save: 'Save',
   screen404: "This screen doesn't exist",
-  titleHome: 'Home',
+  titleHome: 'Lunch Start',
   titleModal: 'Modal',
   titleFavorite: 'Favorite Athletes',
   titleNotFound: 'Not Found',
