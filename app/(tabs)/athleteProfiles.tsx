@@ -1,9 +1,10 @@
-import { Locales } from '@/lib'
 import { router } from 'expo-router'
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Button, Surface } from 'react-native-paper'
 import { WebView } from 'react-native-webview'
+
+import { Locales } from '@/lib'
 
 const AthleteProfiles = () => {
   const handleRequest = (request: any) => {

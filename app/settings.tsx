@@ -18,9 +18,7 @@ import {
   Languages,
   LoadingIndicator,
   Locales,
-  ScreenInfo,
   Setting,
-  styles,
 } from '@/lib'
 
 const Settings = () => {
