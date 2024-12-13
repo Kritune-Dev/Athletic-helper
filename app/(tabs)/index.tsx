@@ -7,11 +7,16 @@ const Starting = () => {
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean>(false)
   const [cameraType, setCameraType] = useState<CameraType>('back')
   const [cameraActive, setCameraActive] = useState<boolean>(false) // Etat pour activer/désactiver la caméra
-
-  // Demande de permission à la caméra
+  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false) // Etat pour le chronomètre
+  const [currentPhase, setCurrentPhase] = useState<'marks' | 'set' | 'go'>(
+    'marks',
+  ) // Phase actuelle
+  const [marksTime, setMarksTime] = useState<number>(5) // Temps pour Marks
+  const [setTime, setSetTime] = useState<number>(5) // Temps pour Set
+  const [timeLeft, setTimeLeft] = useState<number>(marksTime) // Temps restant dans la phase actuelle
   const [permission, requestPermission] = useCameraPermissions()
 
-  // Au premier rendu, on demande les permissions
+  // Demande de permission à la caméra
   useEffect(() => {
     if (permission?.status === 'granted') {
       setHasCameraPermission(true)
@@ -38,6 +43,60 @@ const Starting = () => {
   // Fonction pour ouvrir les paramètres
   const openSettings = () => {
     console.log('Paramètres ouverts')
+  }
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout
+
+    // Déclenche le timer en fonction de la phase actuelle
+    if (isTimerRunning) {
+      if (currentPhase === 'marks') {
+        timer = setInterval(() => {
+          setTimeLeft((prev) => {
+            if (prev <= 1) {
+              clearInterval(timer)
+              if (currentPhase === 'marks') setCurrentPhase('set')
+              return 5 // Réinitialise le décompte pour la phase suivante
+            }
+            return prev - 1
+          })
+        }, 1000)
+      } else if (currentPhase === 'set') {
+        // Lorsque la phase est 'go', on fait un décompte avant le départ
+        timer = setInterval(() => {
+          setTimeLeft((prev) => {
+            if (prev <= 1) {
+              clearInterval(timer)
+              setCurrentPhase('go')
+              return 0
+            }
+            return prev - 1
+          })
+        }, 1000)
+      }
+    }
+
+    // Nettoyer le timer à chaque changement de phase ou si le timer est arrêté
+    return () => clearInterval(timer)
+  }, [currentPhase, isTimerRunning])
+
+  // Démarrer le chronomètre
+  const startChrono = () => {
+    setIsTimerRunning(true)
+    setCurrentPhase('marks')
+    setTimeLeft(5) // Initialiser le temps de départ
+  }
+
+  // Arrêter le chronomètre
+  const stopTimer = () => {
+    setIsTimerRunning(false)
+  }
+
+  // Réinitialiser après le départ
+  const resetAfterGo = () => {
+    setIsTimerRunning(false)
+    setCurrentPhase('marks')
+    setTimeLeft(5) // Réinitialiser le décompte
   }
 
   // Si les permissions ne sont pas encore décidées
@@ -87,8 +146,6 @@ const Starting = () => {
                 <IconButton icon="cog" size={24} onPress={openSettings} />
               </Surface>
             </CameraView>
-
-            {/* Affichage de la caméra */}
           </>
         ) : (
           <>
@@ -111,7 +168,7 @@ const Starting = () => {
 
           {/* Flèche et temps pour Marks */}
           <Surface style={styles.arrowContainer} elevation={0}>
-            <Text style={styles.arrowTime}>5 sec</Text>
+            <Text style={styles.arrowTime}>{marksTime} sec</Text>
             <IconButton icon="arrow-right" size={32} />
           </Surface>
 
@@ -123,7 +180,7 @@ const Starting = () => {
 
           {/* Flèche et temps pour Set */}
           <Surface style={styles.arrowContainer} elevation={0}>
-            <Text style={styles.arrowTime}>5 sec</Text>
+            <Text style={styles.arrowTime}>{setTime} sec</Text>
             <IconButton icon="arrow-right" size={32} />
           </Surface>
 
@@ -135,11 +192,35 @@ const Starting = () => {
         </Surface>
       </Surface>
 
-      {/* Bouton pour lancer le départ */}
+      {/* Affichage du chronomètre et de la phase */}
+      <Text style={styles.timeDisplay}>
+        {isTimerRunning ? (
+          <>
+            {currentPhase === 'marks' && 'Marks: '}
+            {currentPhase === 'set' && 'Set: '}
+            {currentPhase === 'go' && 'Go: '}
+            {timeLeft > 0 ? `${timeLeft} sec` : 'Départ !'}
+          </>
+        ) : (
+          'Départ en attente'
+        )}
+      </Text>
+
+      {/* Contrôles du chronomètre */}
       <Surface>
-        <Button mode="contained" onPress={() => console.log('Départ lancé')}>
-          Lancer le départ
-        </Button>
+        {currentPhase === 'go' ? (
+          <Button mode="contained" onPress={resetAfterGo}>
+            Réinitialiser la procédure
+          </Button>
+        ) : isTimerRunning ? (
+          <Button mode="contained" onPress={stopTimer}>
+            Stop
+          </Button>
+        ) : (
+          <Button mode="contained" onPress={startChrono}>
+            Lancer le départ
+          </Button>
+        )}
       </Surface>
     </Surface>
   )
@@ -160,7 +241,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginBottom: 16,
     borderRadius: 10,
-    height: '50%', // Par défaut, occupe 50% de la page
+    height: '50%',
   },
   cameraDisabledSection: {
     backgroundColor: '#ddd',
@@ -169,7 +250,7 @@ const styles = StyleSheet.create({
     flex: 1 / 6,
     marginBottom: 16,
     borderRadius: 10,
-    height: '15%', // Par défaut, occupe 50% de la page
+    height: '15%',
   },
   startingSection: {
     justifyContent: 'center',
@@ -215,6 +296,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  timeDisplay: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginVertical: 10,
   },
   camera: {
     flex: 1,
