@@ -1,3 +1,4 @@
+import React from 'react'
 import { Chip, Text } from 'react-native-paper'
 
 import { Locales } from '@/lib/locales'

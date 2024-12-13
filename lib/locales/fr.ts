@@ -53,6 +53,11 @@ const French = {
   lime: 'citron vert',
   olive: 'olive',
   brown: 'marron',
+  soundVibration: 'Son et vibration',
+  sound: 'Son',
+  vibration: 'Vibration',
+  changeSoundSettings: 'Modifier les paramètres du son',
+  changeVibrationSettings: 'Modifier les paramètres des vibrations',
 }
 
 export default French

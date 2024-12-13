@@ -1,5 +1,5 @@
 import * as SecureStore from 'expo-secure-store'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Platform, useColorScheme } from 'react-native'
 import {
   Surface,
@@ -9,6 +9,7 @@ import {
   IconButton,
   Snackbar,
   Icon,
+  Switch,
 } from 'react-native-paper'
 
 import {
@@ -20,6 +21,11 @@ import {
   Locales,
   Setting,
 } from '@/lib'
+import {
+  getSoundSettings,
+  updateSoundEnabled,
+  updateVibrationEnabled,
+} from '@/lib/services/soundService'
 
 const Settings = () => {
   const colorScheme = useColorScheme()
@@ -36,22 +42,33 @@ const Settings = () => {
     theme: false,
   })
 
-  React.useEffect(() => {
+  const [soundsEnabled, setSoundsEnabled] = useState<boolean>(true) // Etat du son
+  const [vibrationsEnabled, setVibrationsEnabled] = useState<boolean>(true) // Etat des vibrations
+
+  useEffect(() => {
     setLoading(true)
 
-    if (Platform.OS !== 'web') {
-      SecureStore.getItemAsync('settings')
-        .then((result) =>
-          setSettings(JSON.parse(result ?? JSON.stringify(settings))),
-        )
-        .catch((res) =>
-          setMessage({
-            visible: true,
-            content: res.message,
-          }),
-        )
+    // Charger les paramètres des préférences de son et de vibrations
+    const loadSettings = async () => {
+      const soundSettings = await getSoundSettings()
+      setSoundsEnabled(soundSettings.soundsEnabled)
+      setVibrationsEnabled(soundSettings.vibrationsEnabled)
+
+      if (Platform.OS !== 'web') {
+        SecureStore.getItemAsync('settings')
+          .then((result) =>
+            setSettings(JSON.parse(result ?? JSON.stringify(settings))),
+          )
+          .catch((res) =>
+            setMessage({
+              visible: true,
+              content: res.message,
+            }),
+          )
+      }
     }
 
+    loadSettings()
     setLoading(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -60,6 +77,16 @@ const Settings = () => {
     Colors[
       settings.theme === 'auto' ? (colorScheme ?? 'light') : settings.theme
     ]
+
+  const handleSoundToggle = async (enabled: boolean) => {
+    setSoundsEnabled(enabled)
+    await updateSoundEnabled(enabled) // Enregistrer la modification du son
+  }
+
+  const handleVibrationToggle = async (enabled: boolean) => {
+    setVibrationsEnabled(enabled)
+    await updateVibrationEnabled(enabled) // Enregistrer la modification des vibrations
+  }
 
   return (
     <Surface style={{ flex: 1 }}>
@@ -260,6 +287,36 @@ const Settings = () => {
                       </Surface>
                     ))}
                   </Menu>
+                )}
+              />
+            </List.Accordion>
+            <List.Accordion
+              id="2"
+              title={Locales.t('soundVibration')}
+              left={(props) => <List.Icon {...props} icon="volume-high" />}
+            >
+              <List.Item
+                title={Locales.t('sound')}
+                description={Locales.t('changeSoundSettings')}
+                left={(props) => <List.Icon {...props} icon="music" />}
+                right={(props) => (
+                  <Switch
+                    value={soundsEnabled}
+                    onValueChange={handleSoundToggle}
+                  />
+                )}
+              />
+
+              {/* Paramètre des vibrations */}
+              <List.Item
+                title={Locales.t('vibration')}
+                description={Locales.t('changeVibrationSettings')}
+                left={(props) => <List.Icon {...props} icon="vibrate" />}
+                right={(props) => (
+                  <Switch
+                    value={vibrationsEnabled}
+                    onValueChange={handleVibrationToggle}
+                  />
                 )}
               />
             </List.Accordion>

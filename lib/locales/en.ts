@@ -53,6 +53,11 @@ const English = {
   lime: 'lime',
   olive: 'olive',
   brown: 'brown',
+  soundVibration: 'Sound and Vibration',
+  sound: 'Sound',
+  vibration: 'Vibration',
+  changeSoundSettings: 'Change sound settings',
+  changeVibrationSettings: 'Change vibration settings',
 }
 
 export default English

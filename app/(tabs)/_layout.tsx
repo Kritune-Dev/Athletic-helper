@@ -1,12 +1,49 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { Tabs, router } from 'expo-router'
-import React from 'react'
-import { Appbar, IconButton, Menu, Tooltip } from 'react-native-paper'
+import React, { useEffect, useState } from 'react'
+import {
+  Appbar,
+  IconButton,
+  List,
+  Menu,
+  Switch,
+  Tooltip,
+} from 'react-native-paper'
 
 import { Locales, TabBar, TabsHeader } from '@/lib'
+import {
+  getSoundSettings,
+  updateSoundEnabled,
+  updateVibrationEnabled,
+} from '@/lib/services/soundService'
 
 const TabLayout = () => {
   const [visible, setVisible] = React.useState(false)
+
+  const [soundsEnabled, setSoundsEnabled] = useState(true) // Simuler l'état du son
+  const [vibrationsEnabled, setVibrationsEnabled] = useState(true) // Simuler l'état des vibrations
+
+  useEffect(() => {
+    // Récupérer les paramètres de son et de vibrations au démarrage
+    const loadSettings = async () => {
+      const soundSettings = await getSoundSettings()
+      setSoundsEnabled(soundSettings.soundsEnabled)
+      setVibrationsEnabled(soundSettings.vibrationsEnabled)
+    }
+
+    loadSettings()
+  }, [])
+
+  // Gérer la modification des paramètres
+  const handleSoundToggle = async (enabled: boolean) => {
+    setSoundsEnabled(enabled)
+    await updateSoundEnabled(enabled) // Enregistrer la modification du son
+  }
+
+  const handleVibrationToggle = async (enabled: boolean) => {
+    setVibrationsEnabled(enabled)
+    await updateVibrationEnabled(enabled) // Enregistrer la modification des vibrations
+  }
 
   return (
     <Tabs
@@ -40,6 +77,32 @@ const TabLayout = () => {
                   leadingIcon="cog"
                   onPress={() => router.push('/settings')}
                 />
+
+                {/* Change Sound Settings */}
+                <List.Item
+                  title={Locales.t('sound')}
+                  left={(props) => <List.Icon {...props} icon="music" />}
+                  right={() => (
+                    <Switch
+                      style={{ marginLeft: 10 }}
+                      value={soundsEnabled}
+                      onValueChange={handleSoundToggle}
+                    />
+                  )}
+                />
+
+                {/* Change Vibration Settings */}
+                <List.Item
+                  title={Locales.t('vibration')}
+                  left={(props) => <List.Icon {...props} icon="vibrate" />}
+                  right={() => (
+                    <Switch
+                      style={{ marginLeft: 10 }}
+                      value={vibrationsEnabled}
+                      onValueChange={handleVibrationToggle}
+                    />
+                  )}
+                />
               </Menu>
             </>
           ),
@@ -52,6 +115,7 @@ const TabLayout = () => {
           ),
         }}
       />
+
       <Tabs.Screen
         name="paceCalculator"
         options={{
