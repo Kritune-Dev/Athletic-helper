@@ -1,4 +1,4 @@
-import { router } from 'expo-router'
+import { router, useFocusEffect } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import { Divider, Surface, Text } from 'react-native-paper'
@@ -19,6 +19,17 @@ const Favorites = () => {
 
     fetchFavorites()
   }, [])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchFavorites = async () => {
+        const storedFavorites = await getFavorites()
+        setFavorites(storedFavorites)
+      }
+
+      fetchFavorites()
+    }, []),
+  )
 
   const renderItem = ({ item, index }: any) => {
     return (
