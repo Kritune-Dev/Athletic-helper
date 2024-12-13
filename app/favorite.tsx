@@ -42,7 +42,7 @@ const Favorites = () => {
       {favorites.length > 0 ? (
         <FlatList
           data={favorites}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item) => item.url}
           renderItem={renderItem}
         />
       ) : (
