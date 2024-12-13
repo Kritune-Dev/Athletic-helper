@@ -1,21 +1,62 @@
-import React, { useState } from 'react'
+import { CameraType, CameraView, useCameraPermissions } from 'expo-camera'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 import { Button, IconButton, Surface, Text } from 'react-native-paper'
 
 const Starting = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [hasCameraPermission, setHasCameraPermission] = useState(true) // Change to true to test with permission
+  const [hasCameraPermission, setHasCameraPermission] = useState<boolean>(false)
+  const [cameraType, setCameraType] = useState<CameraType>('back')
+  const [cameraActive, setCameraActive] = useState<boolean>(false) // Etat pour activer/désactiver la caméra
 
-  const toggleCamera = () => {
-    console.log('Caméra retournée')
+  // Demande de permission à la caméra
+  const [permission, requestPermission] = useCameraPermissions()
+
+  // Au premier rendu, on demande les permissions
+  useEffect(() => {
+    if (permission?.status === 'granted') {
+      setHasCameraPermission(true)
+    }
+  }, [permission])
+
+  // Fonction pour retourner la caméra (avant/arrière)
+  function toggleCamera() {
+    setCameraType((current) => (current === 'back' ? 'front' : 'back'))
   }
 
+  // Fonction pour arrêter la caméra (désactive l'affichage)
   const stopCamera = () => {
     console.log('Caméra arrêtée')
+    setCameraActive(false) // Désactiver la caméra
   }
 
+  // Fonction pour réactiver la caméra
+  const startCamera = () => {
+    console.log('Caméra redémarrée')
+    setCameraActive(true) // Réactiver la caméra
+  }
+
+  // Fonction pour ouvrir les paramètres
   const openSettings = () => {
     console.log('Paramètres ouverts')
+  }
+
+  // Si les permissions ne sont pas encore décidées
+  if (permission === null) {
+    return <Text>Chargement des permissions...</Text>
+  }
+
+  // Si les permissions sont refusées, on affiche un message
+  if (!permission.granted) {
+    return (
+      <Surface style={styles.screen}>
+        <Text style={styles.text}>
+          Nous avons besoin de votre permission pour utiliser la caméra
+        </Text>
+        <Button mode="contained" onPress={requestPermission}>
+          Accorder la permission
+        </Button>
+      </Surface>
+    )
   }
 
   return (
@@ -29,22 +70,33 @@ const Starting = () => {
         }
         elevation={1}
       >
-        {hasCameraPermission ? (
+        {hasCameraPermission && cameraActive ? (
           <>
-            <Text style={styles.text}>Zone pour la caméra</Text>
-            {/* Options de la caméra */}
-            <Surface style={styles.cameraOptions} elevation={2}>
-              <IconButton
-                icon="camera-switch"
-                size={24}
-                onPress={toggleCamera}
-              />
-              <IconButton icon="camera-off" size={24} onPress={stopCamera} />
-              <IconButton icon="cog" size={24} onPress={openSettings} />
-            </Surface>
+            <CameraView
+              style={styles.camera}
+              facing={cameraType}
+              active={cameraActive}
+            >
+              <Surface style={styles.cameraOptions} elevation={2}>
+                <IconButton
+                  icon="camera-switch"
+                  size={24}
+                  onPress={toggleCamera}
+                />
+                <IconButton icon="camera-off" size={24} onPress={stopCamera} />
+                <IconButton icon="cog" size={24} onPress={openSettings} />
+              </Surface>
+            </CameraView>
+
+            {/* Affichage de la caméra */}
           </>
         ) : (
-          <Text style={styles.text}>Caméra désactivée</Text>
+          <>
+            <Text style={styles.text}>Caméra désactivée</Text>
+            <Surface style={styles.cameraOptions} elevation={2}>
+              <IconButton icon="camera" size={24} onPress={startCamera} />
+            </Surface>
+          </>
         )}
       </Surface>
 
@@ -163,6 +215,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  camera: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
   },
 })
 
