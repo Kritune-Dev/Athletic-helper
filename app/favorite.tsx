@@ -1,7 +1,7 @@
 import { router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, FlatList, TouchableOpacity } from 'react-native'
-import { Divider, Text } from 'react-native-paper'
+import { StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import { Divider, Surface, Text } from 'react-native-paper'
 
 import { getFavorites } from '@/lib/services/favoriteService'
 
@@ -38,7 +38,7 @@ const Favorites = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <Surface style={styles.container}>
       {favorites.length > 0 ? (
         <FlatList
           data={favorites}
@@ -48,7 +48,7 @@ const Favorites = () => {
       ) : (
         <Text style={styles.emptyMessage}>Aucun favori enregistré.</Text>
       )}
-    </View>
+    </Surface>
   )
 }
 
