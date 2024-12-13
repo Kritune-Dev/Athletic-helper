@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { Tabs, router } from 'expo-router'
 import React from 'react'
-import { Appbar, Menu, Tooltip } from 'react-native-paper'
+import { Appbar, IconButton, Menu, Tooltip } from 'react-native-paper'
 
 import { Locales, TabBar, TabsHeader } from '@/lib'
 
@@ -85,6 +85,11 @@ const TabLayout = () => {
           title: Locales.t('athleteProfiles'),
           headerRight: () => (
             <>
+              <IconButton
+                icon="star"
+                size={30}
+                onPress={() => router.push('/favorite')} // Accède à la page des favoris
+              />
               <Tooltip title={Locales.t('titleSettings')}>
                 <Appbar.Action
                   icon="cog"

@@ -126,7 +126,7 @@ const RootLayoutNav = () => {
             name="favorite"
             options={{ title: Locales.t('titleFavorite') }}
           />
-          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="modal" />
         </Stack>
       </PaperProvider>
 

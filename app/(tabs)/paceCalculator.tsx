@@ -108,7 +108,7 @@ const PaceCalculator = () => {
           <ScrollView>
             {results.length > 0 ? (
               results.map((result, index) => (
-                <View key={index}>
+                <View key={result.distance}>
                   <View style={styles.resultRow}>
                     <Text style={styles.resultDistance}>{result.distance}</Text>
                     <Text style={styles.resultTime}>{result.time}</Text>
