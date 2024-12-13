@@ -1,8 +1,8 @@
-import React from 'react'
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import { CommonActions } from '@react-navigation/native'
-import { BottomNavigation } from 'react-native-paper'
+import React from 'react'
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
+import { BottomNavigation } from 'react-native-paper'
 
 const TabBar = (props: BottomTabBarProps) => {
   const handleTabPress = ({
