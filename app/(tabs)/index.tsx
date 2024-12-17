@@ -1,8 +1,8 @@
 import { Asset } from 'expo-asset'
 import { Audio } from 'expo-av'
-import { CameraType } from 'expo-camera'
+import { Camera, CameraType } from 'expo-camera'
 import React, { useEffect, useState } from 'react'
-import { StyleSheet } from 'react-native'
+import { Alert, StyleSheet } from 'react-native'
 import { Button, Surface, Text } from 'react-native-paper'
 
 import {
@@ -27,9 +27,11 @@ const TIMER_CONFIG = {
 }
 
 const Starting = () => {
-  const [sounds, setSounds] = useState(soundFiles)
+  const [sounds] = useState(soundFiles)
   const [soundsEnabled, setSoundsEnabled] = useState(true)
   const [vibrationsEnabled, setVibrationsEnabled] = useState(true)
+  const [setTime, setSetTime] = useState(TIMER_CONFIG.setTime)
+  const [marksTime, setMarksTime] = useState(TIMER_CONFIG.marksTime)
 
   // Charger les paramètres utilisateur
   useEffect(() => {
@@ -76,12 +78,7 @@ const Starting = () => {
   const { hasCameraPermission, permission, requestPermission } =
     useCameraPermissionsState()
   const { isTimerRunning, currentPhase, timeLeft, start, stopAndReset } =
-    useChronometer(
-      TIMER_CONFIG.marksTime,
-      TIMER_CONFIG.setTime,
-      playSound,
-      vibrationsEnabled,
-    )
+    useChronometer(marksTime, setTime, playSound, vibrationsEnabled)
 
   function toggleCamera() {
     setCameraType((current) => (current === 'back' ? 'front' : 'back'))
@@ -92,8 +89,15 @@ const Starting = () => {
     setCameraActive(false)
   }
 
-  const startCamera = () => {
+  const startCamera = async () => {
     console.log('Caméra redémarrée')
+    const { status } = await Camera.requestCameraPermissionsAsync()
+    console.log(status)
+    if (status === 'granted') {
+      setCameraActive(true)
+    } else {
+      Alert.alert('Access denied')
+    }
     setCameraActive(true)
   }
 
@@ -128,9 +132,15 @@ const Starting = () => {
       <Surface style={styles.startingSection} elevation={4}>
         <Surface style={styles.startingRow} elevation={4}>
           <IconStart title="Marks" icon="flag" />
-          <ArrowStart time={TIMER_CONFIG.marksTime} />
+          <ArrowStart
+            initialTime={marksTime}
+            onTimeChange={(value) => setMarksTime(value)}
+          />
           <IconStart title="Set" icon="run" />
-          <ArrowStart time={TIMER_CONFIG.setTime} />
+          <ArrowStart
+            initialTime={setTime}
+            onTimeChange={(value) => setSetTime(value)}
+          />
           <IconStart title="Go" icon="pistol" />
         </Surface>
       </Surface>
