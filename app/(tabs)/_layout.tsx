@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { Tabs, router } from 'expo-router'
+import { Redirect, Tabs, router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import {
   Appbar,
@@ -10,7 +10,7 @@ import {
   Tooltip,
 } from 'react-native-paper'
 
-import { Locales, TabBar, TabsHeader } from '@/lib'
+import { Locales, TabBar, TabsHeader, useFirstTimeOpen } from '@/lib'
 import {
   getSoundSettings,
   updateSoundEnabled,
@@ -19,6 +19,7 @@ import {
 
 const TabLayout = () => {
   const [visible, setVisible] = React.useState(false)
+  const { isFirstTime, isLoading } = useFirstTimeOpen()
 
   const [soundsEnabled, setSoundsEnabled] = useState(true) // Simuler l'état du son
   const [vibrationsEnabled, setVibrationsEnabled] = useState(true) // Simuler l'état des vibrations
@@ -44,6 +45,9 @@ const TabLayout = () => {
     setVibrationsEnabled(enabled)
     await updateVibrationEnabled(enabled) // Enregistrer la modification des vibrations
   }
+
+  if (isLoading) return <></>
+  if (isFirstTime) return <Redirect href="/onboarding" />
 
   return (
     <Tabs
