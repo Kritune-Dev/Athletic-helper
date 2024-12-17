@@ -1,7 +1,7 @@
 import { CameraView, CameraType } from 'expo-camera'
 import React, { useState, useRef } from 'react'
 import { StyleSheet } from 'react-native'
-import { IconButton, Surface, Text } from 'react-native-paper'
+import { IconButton, Surface } from 'react-native-paper'
 
 type CameraControlProps = {
   cameraActive: boolean
@@ -15,13 +15,6 @@ type CameraControlProps = {
 const CameraControl = (props: CameraControlProps) => {
   const cameraRef = useRef<CameraView>(null)
   const [isRecording, setIsRecording] = useState(false)
-
-  const handleTakePicture = async () => {
-    if (cameraRef.current) {
-      const picture = await cameraRef.current.takePictureAsync()
-      console.log('Photo prise:', picture?.uri)
-    }
-  }
 
   const handleStartRecording = async () => {
     if (cameraRef.current && !isRecording) {
@@ -52,50 +45,30 @@ const CameraControl = (props: CameraControlProps) => {
   }
 
   return (
-    <Surface
-      style={
-        props.hasPermission
-          ? styles.cameraSection
-          : styles.cameraDisabledSection
-      }
-      elevation={1}
-    >
-      {props.hasPermission && props.cameraActive ? (
-        <CameraView
-          style={styles.camera}
-          ref={cameraRef}
-          facing={props.cameraType}
-          active={props.cameraActive}
-          mode="video"
-          onCameraReady={() => console.log('Caméra prête')}
-          onMountError={(error) => console.log('Erreur de montage :', error)}
-        >
-          <Surface style={styles.cameraOptions} elevation={2}>
-            <IconButton
-              icon="camera-switch"
-              size={24}
-              onPress={props.toggleCamera}
-            />
-            <IconButton
-              icon={isRecording ? 'stop' : 'movie'}
-              size={24}
-              onPress={isRecording ? handleStopRecording : handleStartRecording}
-            />
-            <IconButton
-              icon="camera-off"
-              size={24}
-              onPress={props.stopCamera}
-            />
-          </Surface>
-        </CameraView>
-      ) : (
-        <>
-          <Text style={styles.text}>Caméra désactivée</Text>
-          <Surface style={styles.cameraOptions} elevation={2}>
-            <IconButton icon="camera" size={24} onPress={props.startCamera} />
-          </Surface>
-        </>
-      )}
+    <Surface style={styles.cameraSection} elevation={1}>
+      <CameraView
+        style={styles.camera}
+        ref={cameraRef}
+        facing={props.cameraType}
+        active={props.cameraActive}
+        mode="video"
+        onCameraReady={() => console.log('Caméra prête')}
+        onMountError={(error) => console.log('Erreur de montage :', error)}
+      >
+        <Surface style={styles.cameraOptions} elevation={2}>
+          <IconButton
+            icon="camera-switch"
+            size={24}
+            onPress={props.toggleCamera}
+          />
+          <IconButton
+            icon={isRecording ? 'stop' : 'movie'}
+            size={24}
+            onPress={isRecording ? handleStopRecording : handleStartRecording}
+          />
+          <IconButton icon="camera-off" size={24} onPress={props.stopCamera} />
+        </Surface>
+      </CameraView>
     </Surface>
   )
 }
@@ -124,8 +97,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    borderTopStartRadius: 10,
-    borderTopEndRadius: 10,
+    borderRadius: 10,
     width: '100%',
   },
   camera: {

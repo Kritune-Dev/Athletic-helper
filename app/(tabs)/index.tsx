@@ -3,7 +3,7 @@ import { Audio } from 'expo-av'
 import { Camera, CameraType } from 'expo-camera'
 import React, { useEffect, useState } from 'react'
 import { Alert, StyleSheet } from 'react-native'
-import { Button, Surface, Text } from 'react-native-paper'
+import { Button, Surface, Text, Switch } from 'react-native-paper'
 
 import {
   CameraControl,
@@ -32,8 +32,8 @@ const Starting = () => {
   const [vibrationsEnabled, setVibrationsEnabled] = useState(true)
   const [setTime, setSetTime] = useState(TIMER_CONFIG.setTime)
   const [marksTime, setMarksTime] = useState(TIMER_CONFIG.marksTime)
+  const [showCamera, setShowCamera] = useState(false)
 
-  // Charger les paramètres utilisateur
   useEffect(() => {
     const loadSettings = async () => {
       const soundSettings = await getSoundSettings()
@@ -42,30 +42,17 @@ const Starting = () => {
     }
 
     loadSettings()
-
-    // Préchargement des fichiers audio
     Asset.loadAsync(Object.values(sounds))
   }, [sounds])
 
-  // Réagir aux changements de paramètres
-  const updateSettings = async () => {
-    const soundSettings = await getSoundSettings()
-    setSoundsEnabled(soundSettings.soundsEnabled)
-    setVibrationsEnabled(soundSettings.vibrationsEnabled)
-  }
-
   const playSound = async (phase: 'marks' | 'set' | 'go') => {
     if (!soundsEnabled) return
-
     try {
-      await updateSettings()
       const { sound } = await Audio.Sound.createAsync(sounds[phase])
       await sound.playAsync()
       sound.setOnPlaybackStatusUpdate((playbackStatus) => {
-        if (playbackStatus.isLoaded) {
-          if (playbackStatus.didJustFinish) {
-            sound.unloadAsync()
-          }
+        if (playbackStatus.isLoaded && playbackStatus.didJustFinish) {
+          sound.unloadAsync()
         }
       })
     } catch (error) {
@@ -74,31 +61,34 @@ const Starting = () => {
   }
 
   const [cameraType, setCameraType] = useState<CameraType>('back')
-  const [cameraActive, setCameraActive] = useState<boolean>(false)
+  const [cameraActive, setCameraActive] = useState(false)
   const { hasCameraPermission, permission, requestPermission } =
     useCameraPermissionsState()
   const { isTimerRunning, currentPhase, timeLeft, start, stopAndReset } =
     useChronometer(marksTime, setTime, playSound, vibrationsEnabled)
 
-  function toggleCamera() {
+  const toggleCamera = () => {
     setCameraType((current) => (current === 'back' ? 'front' : 'back'))
   }
 
+  const toggleShowCamera = (value: boolean) => {
+    if (value) startCamera()
+    else stopCamera()
+  }
+
   const stopCamera = () => {
-    console.log('Caméra arrêtée')
+    setShowCamera(false)
     setCameraActive(false)
   }
 
   const startCamera = async () => {
-    console.log('Caméra redémarrée')
     const { status } = await Camera.requestCameraPermissionsAsync()
-    console.log(status)
     if (status === 'granted') {
+      setShowCamera(true)
       setCameraActive(true)
     } else {
-      Alert.alert('Access denied')
+      Alert.alert('Accès refusé')
     }
-    setCameraActive(true)
   }
 
   if (!permission) {
@@ -120,17 +110,29 @@ const Starting = () => {
 
   return (
     <Surface style={styles.screen}>
-      <CameraControl
-        cameraActive={cameraActive}
-        cameraType={cameraType}
-        hasPermission={hasCameraPermission}
-        toggleCamera={toggleCamera}
-        stopCamera={stopCamera}
-        startCamera={startCamera}
-      />
+      <Surface style={styles.switchContainer} elevation={0}>
+        <Text style={styles.text}>Afficher la caméra</Text>
+        <Switch
+          value={showCamera}
+          onValueChange={(value) => toggleShowCamera(value)}
+        />
+      </Surface>
+
+      {showCamera && (
+        <Surface style={styles.cameraWrapper} elevation={0}>
+          <CameraControl
+            cameraActive={cameraActive}
+            cameraType={cameraType}
+            hasPermission={hasCameraPermission}
+            toggleCamera={toggleCamera}
+            stopCamera={stopCamera}
+            startCamera={startCamera}
+          />
+        </Surface>
+      )}
 
       <Surface style={styles.startingSection} elevation={4}>
-        <Surface style={styles.startingRow} elevation={4}>
+        <Surface style={styles.startingRow}>
           <IconStart title="Marks" icon="flag" />
           <ArrowStart
             initialTime={marksTime}
@@ -144,15 +146,12 @@ const Starting = () => {
           <IconStart title="Go" icon="pistol" />
         </Surface>
       </Surface>
+
       <TimerDisplay phase={currentPhase} timeLeft={timeLeft} />
-      <Surface>
-        <Button
-          mode="contained"
-          onPress={isTimerRunning ? stopAndReset : start}
-        >
-          {isTimerRunning ? 'Stop' : 'Lancer le départ'}
-        </Button>
-      </Surface>
+
+      <Button mode="contained" onPress={isTimerRunning ? stopAndReset : start}>
+        {isTimerRunning ? 'Stop' : 'Lancer le départ'}
+      </Button>
     </Surface>
   )
 }
@@ -160,30 +159,39 @@ const Starting = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    height: '100%',
-    justifyContent: 'space-between',
-    width: '100%',
     padding: 10,
+    justifyContent: 'space-between',
+  },
+  text: {
+    fontSize: 18,
+  },
+  switchContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 8,
+    marginBottom: 10,
+    borderRadius: 8,
+  },
+  cameraWrapper: {
+    height: 300, // Taille fixe pour la caméra
+    borderRadius: 10,
+    overflow: 'hidden',
+    marginBottom: 16,
   },
   startingSection: {
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 1,
-    height: '100%',
     marginBottom: 16,
     borderRadius: 10,
-  },
-  text: {
-    fontSize: 18,
-    color: 'white',
   },
   startingRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    padding: 10,
     width: '100%',
-    height: '100%',
+    padding: 10,
+    borderRadius: 10,
   },
 })
 
