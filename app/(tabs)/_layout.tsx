@@ -1,14 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { Redirect, Tabs, router } from 'expo-router'
+import { Redirect, Tabs } from 'expo-router'
 import React, { useEffect, useState } from 'react'
-import {
-  Appbar,
-  IconButton,
-  List,
-  Menu,
-  Switch,
-  Tooltip,
-} from 'react-native-paper'
+import { Appbar, List, Menu, Switch, Tooltip } from 'react-native-paper'
 
 import { Locales, TabBar, TabsHeader, useFirstTimeOpen } from '@/lib'
 import {
@@ -46,8 +39,8 @@ const TabLayout = () => {
     await updateVibrationEnabled(enabled) // Enregistrer la modification des vibrations
   }
 
-   if (isLoading) return <></>;
-  if (isFirstTime) return <Redirect href={"/onboarding"} />;
+  if (isLoading) return <></>
+  if (isFirstTime) return <Redirect href="/onboarding" />
 
   return (
     <Tabs
@@ -58,9 +51,9 @@ const TabLayout = () => {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="start"
         options={{
-          title: Locales.t('titleHome'),
+          title: Locales.t('start.title'),
           headerRight: () => (
             <>
               <Menu
@@ -76,12 +69,6 @@ const TabLayout = () => {
                   </Tooltip>
                 }
               >
-                <Menu.Item
-                  title={Locales.t('titleSettings')}
-                  leadingIcon="cog"
-                  onPress={() => router.push('/settings')}
-                />
-
                 {/* Change Sound Settings */}
                 <List.Item
                   title={Locales.t('sound')}
@@ -121,57 +108,25 @@ const TabLayout = () => {
       />
 
       <Tabs.Screen
-        name="paceCalculator"
+        name="index"
         options={{
-          title: Locales.t('paceCalculator'),
-          headerRight: () => (
-            <>
-              <Tooltip title={Locales.t('titleSettings')}>
-                <Appbar.Action
-                  icon="cog"
-                  onPress={() => router.push('/settings')}
-                />
-              </Tooltip>
-            </>
-          ),
+          title: Locales.t('home.title'),
           tabBarIcon: (props) => (
             <MaterialCommunityIcons
               {...props}
               size={24}
-              name={
-                props.focused
-                  ? 'calculator-variant'
-                  : 'calculator-variant-outline'
-              }
+              name={props.focused ? 'home' : 'home-outline'}
             />
           ),
         }}
       />
+
       <Tabs.Screen
-        name="athleteProfiles"
+        name="utils"
         options={{
-          title: Locales.t('athleteProfiles'),
-          headerRight: () => (
-            <>
-              <IconButton
-                icon="star"
-                size={30}
-                onPress={() => router.push('/favorite')} // Accède à la page des favoris
-              />
-              <Tooltip title={Locales.t('titleSettings')}>
-                <Appbar.Action
-                  icon="cog"
-                  onPress={() => router.push('/settings')}
-                />
-              </Tooltip>
-            </>
-          ),
+          title: Locales.t('utilsPage.title'),
           tabBarIcon: (props) => (
-            <MaterialCommunityIcons
-              {...props}
-              size={24}
-              name={props.focused ? 'run-fast' : 'run'}
-            />
+            <MaterialCommunityIcons {...props} size={24} name="tools" />
           ),
         }}
       />

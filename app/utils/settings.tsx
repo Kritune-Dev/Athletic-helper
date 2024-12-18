@@ -275,7 +275,7 @@ const Settings = () => {
 
                         <Menu.Item
                           key={color}
-                          title={Locales.t(color)}
+                          title={Locales.t('settings.color.' + color)}
                           onPress={() => {
                             setSettings({
                               ...settings,

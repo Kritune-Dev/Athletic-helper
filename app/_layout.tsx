@@ -119,8 +119,16 @@ const RootLayoutNav = () => {
         >
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
-            name="settings"
-            options={{ title: Locales.t('titleSettings') }}
+            name="utils/settings"
+            options={{ title: Locales.t('settings.title') }}
+          />
+          <Stack.Screen
+            name="utils/athleteSearch"
+            options={{ title: Locales.t('athleteSearch.title') }}
+          />
+          <Stack.Screen
+            name="utils/sprintCalculator"
+            options={{ title: Locales.t('sprintCalculator.title') }}
           />
           <Stack.Screen
             name="favorite"

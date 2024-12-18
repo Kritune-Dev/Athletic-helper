@@ -13,11 +13,11 @@ const PaceCalculator = () => {
 
   const formatTime = (timeInSeconds: number): string => {
     if (timeInSeconds < 60) {
-      return `${timeInSeconds.toFixed(2)} ${Locales.t('seconds')}`
+      return `${timeInSeconds.toFixed(2)} ${Locales.t('sprintCalculator.seconds')}`
     }
     const minutes = Math.floor(timeInSeconds / 60)
     const seconds = (timeInSeconds % 60).toFixed(0).padStart(2, '0')
-    return `${minutes} ${Locales.t('minutes')} ${seconds} ${Locales.t('seconds')}`
+    return `${minutes} ${Locales.t('sprintCalculator.minutes')} ${seconds} ${Locales.t('sprintCalculator.seconds')}`
   }
 
   const calculatePace = useCallback(() => {
@@ -77,7 +77,7 @@ const PaceCalculator = () => {
     <Surface style={styles.screen}>
       <View style={styles.inputsContainer}>
         <TextInput
-          label={Locales.t('distance')}
+          label={Locales.t('sprintCalculator.distance')}
           value={distance}
           onChangeText={handleChangeDistance}
           keyboardType="numeric"
@@ -88,7 +88,7 @@ const PaceCalculator = () => {
         />
 
         <TextInput
-          label={Locales.t('pace')}
+          label={Locales.t('sprintCalculator.pace')}
           value={pace}
           onChangeText={handleChangePace}
           keyboardType="numeric"
@@ -101,7 +101,7 @@ const PaceCalculator = () => {
 
       <Card style={styles.resultsCard} elevation={3}>
         <Card.Title
-          title={Locales.t('results')}
+          title={Locales.t('sprintCalculator.results')}
           titleStyle={styles.cardTitle}
         />
         <Card.Content>
@@ -119,7 +119,9 @@ const PaceCalculator = () => {
                 </View>
               ))
             ) : (
-              <Text style={styles.placeholder}>{Locales.t('placeholder')}</Text>
+              <Text style={styles.placeholder}>
+                {Locales.t('sprintCalculator.placeholder')}
+              </Text>
             )}
           </ScrollView>
         </Card.Content>

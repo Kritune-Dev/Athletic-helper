@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native'
 import { Button } from 'react-native-paper'
 import { WebView } from 'react-native-webview'
 
-const AthleteProfiles = () => {
+const AthleteSearch = () => {
   const webViewRef = useRef<WebView>(null) // Référence pour WebView
   const [canGoBack, setCanGoBack] = useState(false) // Etat pour savoir si la WebView peut revenir en arrière
 
@@ -80,4 +80,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default AthleteProfiles
+export default AthleteSearch
