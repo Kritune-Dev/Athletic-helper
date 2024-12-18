@@ -110,6 +110,7 @@ const TabLayout = () => {
       <Tabs.Screen
         name="index"
         options={{
+          headerShown: false,
           title: Locales.t('home.title'),
           tabBarIcon: (props) => (
             <MaterialCommunityIcons

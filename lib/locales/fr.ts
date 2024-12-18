@@ -39,7 +39,7 @@ const French = {
     title: 'Départ',
   },
   home: {
-    title: 'Acceuil',
+    title: 'Accueil',
   },
   settings: {
     title: 'Paramètres',

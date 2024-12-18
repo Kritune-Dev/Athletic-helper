@@ -3,38 +3,7 @@ import React from 'react'
 import { StyleSheet, Dimensions } from 'react-native'
 import { Card, Surface, Avatar } from 'react-native-paper'
 
-import { Locales } from '@/lib'
-
-type ToolRoute =
-  | '/utils/settings'
-  | '/utils/athleteSearch'
-  | '/utils/sprintCalculator'
-
-const tools: {
-  title: string
-  subtitle: string
-  route: ToolRoute
-  icon: string
-}[] = [
-  {
-    title: Locales.t('settings.title'),
-    subtitle: Locales.t('settings.subtitle'),
-    route: '/utils/settings',
-    icon: 'cog',
-  },
-  {
-    title: Locales.t('athleteSearch.title'),
-    subtitle: Locales.t('athleteSearch.subtitle'),
-    route: '/utils/athleteSearch',
-    icon: 'account-search',
-  },
-  {
-    title: Locales.t('sprintCalculator.title'),
-    subtitle: Locales.t('sprintCalculator.subtitle'),
-    route: '/utils/sprintCalculator',
-    icon: 'timer',
-  },
-]
+import tools from '@/lib/utils/tools'
 
 const UtilsPage = () => {
   const cardHeight = Dimensions.get('window').height / 8 // Fixed height based on screen size
