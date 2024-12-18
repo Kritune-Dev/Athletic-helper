@@ -3,7 +3,7 @@ import { useCameraPermissions, useMicrophonePermissions } from 'expo-camera'
 import { usePermissions } from 'expo-media-library'
 import { router } from 'expo-router'
 import React from 'react'
-import { Alert, ScrollView, StyleSheet } from 'react-native'
+import { Alert, StyleSheet } from 'react-native'
 import { Button, Card, Surface, Text } from 'react-native-paper'
 import Animated, {
   useAnimatedStyle,

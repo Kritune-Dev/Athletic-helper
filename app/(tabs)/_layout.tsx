@@ -46,8 +46,8 @@ const TabLayout = () => {
     await updateVibrationEnabled(enabled) // Enregistrer la modification des vibrations
   }
 
-  if (isLoading) return <></>
-  if (isFirstTime) return <Redirect href="/onboarding" />
+   if (isLoading) return <></>;
+  if (isFirstTime) return <Redirect href={"/onboarding"} />;
 
   return (
     <Tabs

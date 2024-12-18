@@ -44,7 +44,7 @@ const CameraControl = (props: CameraControlProps) => {
           const uri = video?.uri as string
           console.log('Video uri :', uri)
           //const result = await MediaLibrary.saveToLibraryAsync(uri) //Wait the fix
-         // console.log('Vidéo sauvegardée dans la galerie')
+          // console.log('Vidéo sauvegardée dans la galerie')
         } else {
           console.warn('Permission pour la galerie non accordée')
         }
