@@ -69,7 +69,6 @@ const AthleteSearch = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 10, // Pour ne pas que le bouton touche le bord
   },
   webviewContainer: {
     flex: 1,
