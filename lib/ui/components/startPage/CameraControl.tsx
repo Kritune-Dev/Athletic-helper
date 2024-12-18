@@ -1,5 +1,6 @@
 import { CameraView, CameraType } from 'expo-camera'
-import React, { useState, useRef } from 'react'
+import * as MediaLibrary from 'expo-media-library'
+import React, { useState, useRef, useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 import { IconButton, Surface } from 'react-native-paper'
 
@@ -15,19 +16,41 @@ type CameraControlProps = {
 const CameraControl = (props: CameraControlProps) => {
   const cameraRef = useRef<CameraView>(null)
   const [isRecording, setIsRecording] = useState(false)
+  const [mediaPermission, setMediaPermission] = useState<boolean | null>(null)
+  const [videoUri, setVideoUri] = useState<string>('')
+
+  // Demander la permission pour la galerie lors du montage
+  useEffect(() => {
+    const getMediaPermission = async () => {
+      const { status } = await MediaLibrary.requestPermissionsAsync()
+      setMediaPermission(status === 'granted')
+    }
+    getMediaPermission()
+  }, [])
 
   const handleStartRecording = async () => {
     if (cameraRef.current && !isRecording) {
       try {
         console.log('Lancement de la vidéo')
-        const video = await cameraRef.current.recordAsync({
-          maxDuration: 1,
-        })
-        console.log(video)
         setIsRecording(true)
-        console.log('Vidéo enregistrée:', video?.uri)
+
+        const video = await cameraRef.current.recordAsync({
+          maxDuration: 5, // Durée max en secondes
+        })
+
+        // Sauvegarder dans la galerie si permission accordée
+        if (mediaPermission) {
+          console.log('Tentative enregistrement')
+          const uri = video?.uri as string
+          console.log('Video uri :', uri)
+          //const result = await MediaLibrary.saveToLibraryAsync(uri) //Wait the fix
+         // console.log('Vidéo sauvegardée dans la galerie')
+        } else {
+          console.warn('Permission pour la galerie non accordée')
+        }
       } catch (error) {
         console.error("Erreur lors de l'enregistrement de la vidéo:", error)
+        setIsRecording(false)
       }
     }
   }
@@ -44,6 +67,16 @@ const CameraControl = (props: CameraControlProps) => {
     }
   }
 
+  // Gestion de la caméra prête
+  const onCameraReady = () => {
+    console.log('Caméra prête')
+  }
+
+  // Gestion des erreurs de montage de la caméra
+  const onMountError = (error: any) => {
+    console.log('Erreur de montage :', error)
+  }
+
   return (
     <Surface style={styles.cameraSection} elevation={1}>
       <CameraView
@@ -52,8 +85,8 @@ const CameraControl = (props: CameraControlProps) => {
         facing={props.cameraType}
         active={props.cameraActive}
         mode="video"
-        onCameraReady={() => console.log('Caméra prête')}
-        onMountError={(error) => console.log('Erreur de montage :', error)}
+        onCameraReady={onCameraReady}
+        onMountError={onMountError}
       >
         <Surface style={styles.cameraOptions} elevation={2}>
           <IconButton
