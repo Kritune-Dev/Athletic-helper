@@ -126,6 +126,14 @@ const RootLayoutNav = () => {
             name="favorite"
             options={{ title: Locales.t('titleFavorite') }}
           />
+          <Stack.Screen
+            name="onboarding"
+            options={{
+              presentation: 'fullScreenModal',
+              headerShown: false,
+              animation: 'fade',
+            }}
+          />
           <Stack.Screen name="modal" />
         </Stack>
       </PaperProvider>

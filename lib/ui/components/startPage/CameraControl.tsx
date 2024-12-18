@@ -1,7 +1,8 @@
 import { CameraView, CameraType } from 'expo-camera'
-import React from 'react'
+import * as MediaLibrary from 'expo-media-library'
+import React, { useState, useRef, useEffect } from 'react'
 import { StyleSheet } from 'react-native'
-import { IconButton, Surface, Text } from 'react-native-paper'
+import { IconButton, Surface } from 'react-native-paper'
 
 type CameraControlProps = {
   cameraActive: boolean
@@ -12,18 +13,80 @@ type CameraControlProps = {
   startCamera: () => void
 }
 
-const CameraControl = (props: CameraControlProps) => (
-  <Surface
-    style={
-      props.hasPermission ? styles.cameraSection : styles.cameraDisabledSection
+const CameraControl = (props: CameraControlProps) => {
+  const cameraRef = useRef<CameraView>(null)
+  const [isRecording, setIsRecording] = useState(false)
+  const [mediaPermission, setMediaPermission] = useState<boolean | null>(null)
+  const [videoUri, setVideoUri] = useState<string>('')
+
+  // Demander la permission pour la galerie lors du montage
+  useEffect(() => {
+    const getMediaPermission = async () => {
+      const { status } = await MediaLibrary.requestPermissionsAsync()
+      setMediaPermission(status === 'granted')
     }
-    elevation={1}
-  >
-    {props.hasPermission && props.cameraActive ? (
+    getMediaPermission()
+  }, [])
+
+  const handleStartRecording = async () => {
+    if (cameraRef.current && !isRecording) {
+      try {
+        console.log('Lancement de la vidéo')
+        setIsRecording(true)
+
+        const video = await cameraRef.current.recordAsync({
+          maxDuration: 5, // Durée max en secondes
+        })
+
+        // Sauvegarder dans la galerie si permission accordée
+        if (mediaPermission) {
+          console.log('Tentative enregistrement')
+          const uri = video?.uri as string
+          console.log('Video uri :', uri)
+          //const result = await MediaLibrary.saveToLibraryAsync(uri) //Wait the fix
+          // console.log('Vidéo sauvegardée dans la galerie')
+        } else {
+          console.warn('Permission pour la galerie non accordée')
+        }
+      } catch (error) {
+        console.error("Erreur lors de l'enregistrement de la vidéo:", error)
+        setIsRecording(false)
+      }
+    }
+  }
+
+  const handleStopRecording = async () => {
+    if (cameraRef.current && isRecording) {
+      try {
+        await cameraRef.current.stopRecording()
+        setIsRecording(false)
+        console.log('Enregistrement arrêté')
+      } catch (error) {
+        console.error("Erreur lors de l'arrêt de l'enregistrement:", error)
+      }
+    }
+  }
+
+  // Gestion de la caméra prête
+  const onCameraReady = () => {
+    console.log('Caméra prête')
+  }
+
+  // Gestion des erreurs de montage de la caméra
+  const onMountError = (error: any) => {
+    console.log('Erreur de montage :', error)
+  }
+
+  return (
+    <Surface style={styles.cameraSection} elevation={1}>
       <CameraView
         style={styles.camera}
+        ref={cameraRef}
         facing={props.cameraType}
         active={props.cameraActive}
+        mode="video"
+        onCameraReady={onCameraReady}
+        onMountError={onMountError}
       >
         <Surface style={styles.cameraOptions} elevation={2}>
           <IconButton
@@ -31,20 +94,17 @@ const CameraControl = (props: CameraControlProps) => (
             size={24}
             onPress={props.toggleCamera}
           />
+          <IconButton
+            icon={isRecording ? 'stop' : 'movie'}
+            size={24}
+            onPress={isRecording ? handleStopRecording : handleStartRecording}
+          />
           <IconButton icon="camera-off" size={24} onPress={props.stopCamera} />
-          {/* Ajoutez d'autres boutons ici, comme pour filmer ou activer le flash */}
         </Surface>
       </CameraView>
-    ) : (
-      <>
-        <Text style={styles.text}>Caméra désactivée</Text>
-        <Surface style={styles.cameraOptions} elevation={2}>
-          <IconButton icon="camera" size={24} onPress={props.startCamera} />
-        </Surface>
-      </>
-    )}
-  </Surface>
-)
+    </Surface>
+  )
+}
 
 const styles = StyleSheet.create({
   cameraSection: {
@@ -70,8 +130,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    borderTopStartRadius: 10,
-    borderTopEndRadius: 10,
+    borderRadius: 10,
     width: '100%',
   },
   camera: {
