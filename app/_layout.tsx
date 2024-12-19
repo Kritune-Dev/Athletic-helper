@@ -134,6 +134,7 @@ const RootLayoutNav = () => {
             name="favorite"
             options={{ title: Locales.t('titleFavorite') }}
           />
+          <Stack.Screen name="views/editProfile" />
           <Stack.Screen
             name="onboarding"
             options={{
