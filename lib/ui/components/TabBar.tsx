@@ -2,10 +2,9 @@ import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import { CommonActions } from '@react-navigation/native'
 import React from 'react'
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
-import { BottomNavigation, useTheme } from 'react-native-paper'
+import { BottomNavigation } from 'react-native-paper'
 
 const TabBar = (props: BottomTabBarProps) => {
-  const { colors } = useTheme() // Récupère les couleurs du thème
   const handleTabPress = ({
     route,
     preventDefault,
@@ -71,7 +70,6 @@ const TabBar = (props: BottomTabBarProps) => {
       renderIcon={renderIcon}
       getLabelText={getLabelText}
       renderTouchable={renderTouchable}
-      style={{ backgroundColor: colors.elevation.level0 }}
     />
   )
 }

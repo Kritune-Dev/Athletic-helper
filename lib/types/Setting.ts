@@ -1,8 +1,8 @@
-import { Color, Language } from '@/lib/types'
+import { Color, Language, ThemeType } from '@/lib/types'
 
 type Setting = {
   color: Color
-  theme: 'light' | 'dark' | 'auto'
+  theme: ThemeType
   language: Language | 'auto'
 }
 

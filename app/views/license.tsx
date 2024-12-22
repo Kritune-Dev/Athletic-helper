@@ -4,8 +4,7 @@ import * as ImagePicker from 'expo-image-picker'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Image, View, TouchableOpacity, Alert } from 'react-native'
-import { Button, Card, Text, IconButton, Surface } from 'react-native-paper'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { Card, Text, IconButton, Surface } from 'react-native-paper'
 
 const LICENSE_STORAGE_KEY = 'saved_license'
 

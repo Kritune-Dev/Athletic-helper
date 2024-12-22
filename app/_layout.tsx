@@ -4,26 +4,19 @@ import { NotoSans_400Regular } from '@expo-google-fonts/noto-sans'
 import {
   DarkTheme as NavDarkTheme,
   DefaultTheme as NavLightTheme,
-  ThemeProvider,
 } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
-import * as Localization from 'expo-localization'
 import { SplashScreen, Stack } from 'expo-router'
-import * as SecureStore from 'expo-secure-store'
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
-import { Platform, useColorScheme } from 'react-native'
-import { adaptNavigationTheme, PaperProvider } from 'react-native-paper'
+import { PaperProvider, adaptNavigationTheme } from 'react-native-paper'
 
-import { Locales, Setting, StackHeader, Themes } from '@/lib'
+import { Locales, StackHeader, Themes } from '@/lib'
 
-// Catch any errors thrown by the Layout component.
+// eslint-disable-next-line import/namespace
+import { ThemeProvider, useTheme } from './themeContext'
+
 export { ErrorBoundary } from 'expo-router'
-
-// Ensure that reloading on `/modal` keeps a back button present.
-export const unstable_settings = { initialRouteName: '(tabs)' }
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
 
 const RootLayout = () => {
@@ -48,109 +41,53 @@ const RootLayout = () => {
     return null
   }
 
-  return <RootLayoutNav />
+  return (
+    <ThemeProvider>
+      <RootLayoutNav />
+    </ThemeProvider>
+  )
 }
 
 const RootLayoutNav = () => {
-  const colorScheme = useColorScheme()
-  const [settings, setSettings] = React.useState<Setting>({
-    theme: 'auto',
-    color: 'default',
-    language: 'auto',
-  })
-
-  // Load settings from the device
-  React.useEffect(() => {
-    if (Platform.OS !== 'web') {
-      SecureStore.getItemAsync('settings').then((result) => {
-        if (result === null) {
-          SecureStore.setItemAsync('settings', JSON.stringify(settings)).then(
-            (res) => console.log(res),
-          )
-        }
-
-        setSettings(JSON.parse(result ?? JSON.stringify(settings)))
-      })
-    } else {
-      setSettings({ ...settings, theme: colorScheme ?? 'light' })
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  React.useEffect(() => {
-    if (settings.language === 'auto') {
-      Locales.locale = Localization.getLocales()[0].languageCode ?? 'en'
-    } else {
-      Locales.locale = settings.language
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const theme =
-    Themes[
-      settings.theme === 'auto' ? (colorScheme ?? 'dark') : settings.theme
-    ][settings.color]
+  const { theme, color } = useTheme()
 
   const { DarkTheme, LightTheme } = adaptNavigationTheme({
     reactNavigationDark: NavDarkTheme,
     reactNavigationLight: NavLightTheme,
-    materialDark: Themes.dark[settings.color],
-    materialLight: Themes.light[settings.color],
+    materialDark: Themes.dark[color],
+    materialLight: Themes.light[color],
   })
 
   return (
-    <ThemeProvider
-      value={
-        colorScheme === 'light'
-          ? { ...LightTheme, fonts: NavLightTheme.fonts }
-          : { ...DarkTheme, fonts: NavDarkTheme.fonts }
-      }
-    >
-      <PaperProvider theme={theme}>
-        <Stack
-          screenOptions={{
-            animation: 'slide_from_bottom',
-            header: (props) => (
-              <StackHeader navProps={props} children={undefined} />
-            ),
+    <PaperProvider theme={Themes[theme === 'light' ? 'light' : 'dark'][color]}>
+      <Stack
+        screenOptions={{
+          animation: 'slide_from_bottom',
+          header: (props) => <StackHeader navProps={props} />,
+        }}
+      >
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="settings"
+          options={{ title: Locales.t('titleSettings') }}
+        />
+        <Stack.Screen
+          name="favorite"
+          options={{ title: Locales.t('titleFavorite') }}
+        />
+        <Stack.Screen
+          name="onboarding"
+          options={{
+            presentation: 'fullScreenModal',
+            headerShown: false,
+            animation: 'fade',
           }}
-        >
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="utils/start"
-            options={{ title: Locales.t('settings.title') }}
-          />
-          <Stack.Screen
-            name="utils/athleteSearch"
-            options={{ title: Locales.t('athleteSearch.title') }}
-          />
-          <Stack.Screen
-            name="utils/sprintCalculator"
-            options={{ title: Locales.t('sprintCalculator.title') }}
-          />
-          <Stack.Screen
-            name="favorite"
-            options={{ title: Locales.t('titleFavorite') }}
-          />
-          <Stack.Screen name="views/editProfile" />
-          <Stack.Screen name="views/editLinks" />
-          <Stack.Screen name="views/license" />
-          <Stack.Screen
-            name="onboarding"
-            options={{
-              presentation: 'fullScreenModal',
-              headerShown: false,
-              animation: 'fade',
-            }}
-          />
-          <Stack.Screen name="modal" />
-        </Stack>
-      </PaperProvider>
+        />
+        <Stack.Screen name="modal" />
+      </Stack>
 
       <StatusBar style="auto" />
-    </ThemeProvider>
+    </PaperProvider>
   )
 }
 
