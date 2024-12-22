@@ -1,66 +1,75 @@
 import { BottomTabHeaderProps } from '@react-navigation/bottom-tabs'
 import { getHeaderTitle } from '@react-navigation/elements'
 import React from 'react'
-import {
-  Appbar,
-  AppbarProps,
-  IconButton,
-  Searchbar,
-  SearchbarProps,
-  Tooltip,
-} from 'react-native-paper'
+import { Image, StyleSheet, View } from 'react-native'
+import { Appbar, Avatar } from 'react-native-paper'
 
-interface TabsHeaderProps extends AppbarProps {
+interface TabsHeaderProps {
   navProps: BottomTabHeaderProps
-  withSearchBar?: boolean
-  searchBarProps?: SearchbarProps
+  userAvatar?: string // URL de l'image utilisateur ou texte pour Avatar
 }
 
-const TabsHeader = (props: TabsHeaderProps) => {
-  const [query, setQuery] = React.useState('')
+const TabsHeader = ({ navProps, userAvatar }: TabsHeaderProps) => {
+  const isHomePage = navProps.route.name === 'index'
 
-  return props.withSearchBar ? (
-    <Appbar.Header {...props}>
-      <Searchbar
-        {...props.searchBarProps}
-        value={query}
-        onChangeText={setQuery}
-        style={{ margin: 8, marginBottom: 16 }}
-        right={(p) => (
-          <Tooltip title="Perform search">
-            <IconButton
-              {...p}
-              icon="check"
-              onPress={() =>
-                props.searchBarProps?.onChangeText
-                  ? props.searchBarProps.onChangeText(query)
-                  : undefined
-              }
+  // Titre et logo de l'application
+  const appTitle = 'Athlétisme Helper'
+  const appLogo = require('@/assets/images/icon.png') // Chemin vers ton logo local
+
+  return (
+    <Appbar.Header mode="center-aligned">
+      {isHomePage ? (
+        <View style={styles.homeContainer}>
+          {/* Logo et titre pour la page d'accueil */}
+          <Image source={appLogo} style={styles.logo} />
+          <Appbar.Content title={appTitle} titleStyle={styles.title} />
+          {userAvatar ? (
+            <Avatar.Image
+              size={36}
+              source={{ uri: userAvatar }}
+              style={styles.avatar}
             />
-          </Tooltip>
-        )}
-      />
-    </Appbar.Header>
-  ) : (
-    <Appbar.Header {...props}>
-      {props.navProps.options.headerLeft
-        ? props.navProps.options.headerLeft({})
-        : undefined}
-
-      <Appbar.Content
-        title={getHeaderTitle(
-          props.navProps.options,
-          props.navProps.route.name,
-        )}
-      />
-
-      {props.navProps.options.headerRight
-        ? props.navProps.options.headerRight({
-            canGoBack: props.navProps.navigation.canGoBack(),
-          })
-        : undefined}
+          ) : (
+            <Avatar.Text size={36} label="CB" style={styles.avatar} />
+          )}
+        </View>
+      ) : (
+        <>
+          {/* Titre centré pour les autres pages */}
+          <Appbar.Content
+            title={getHeaderTitle(navProps.options, navProps.route.name)}
+            titleStyle={styles.titleCentered}
+          />
+        </>
+      )}
     </Appbar.Header>
   )
 }
+
+const styles = StyleSheet.create({
+  homeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flex: 1,
+    paddingHorizontal: 16, // Ajoute de l'espace des deux côtés
+  },
+  logo: {
+    width: 36,
+    height: 36,
+    marginRight: 8, // Espace entre le logo et le titre
+  },
+  title: {
+    fontWeight: 'bold',
+  },
+  avatar: {
+    marginLeft: 8, // Espace entre le titre et l'avatar
+    marginRight: 8, // Espace entre l'avatar et le bord de l'écran
+  },
+  titleCentered: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+})
 
 export default TabsHeader

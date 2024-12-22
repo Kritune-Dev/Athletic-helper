@@ -16,6 +16,7 @@ import {
   Text,
   IconButton,
 } from 'react-native-paper'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { Tools, Links, Profile } from '@/lib'
 import { loadProfile } from '@/lib/services/profileService'
@@ -75,7 +76,7 @@ const Home = () => {
             </View>
           </View>
 
-          <Text style={styles.license} variant="labelLarge">
+          <Text style={styles.license} variant="labelSmall">
             N° {profile.licenseNumber}
           </Text>
 
@@ -88,7 +89,12 @@ const Home = () => {
             >
               Modifier
             </Button>
-            <Button mode="contained-tonal" style={styles.button} icon="id-card">
+            <Button
+              mode="contained-tonal"
+              style={styles.button}
+              icon="id-card"
+              onPress={() => router.push('/views/license')}
+            >
               Voir ma licence
             </Button>
           </View>
@@ -101,7 +107,7 @@ const Home = () => {
             <IconButton
               icon="pencil"
               size={20}
-              onPress={() => {}}
+              onPress={() => router.push('/views/editLinks')}
               style={styles.editIcon}
             />
           </View>
@@ -161,8 +167,7 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    paddingTop: 70,
+    padding: 10,
   },
   card: {
     padding: 8,
@@ -174,27 +179,28 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   avatar: {
+    marginTop: 10,
+    marginLeft: 10,
     marginRight: 15,
   },
   infoContainer: {
+    marginTop: 10,
     flexDirection: 'column',
     justifyContent: 'center',
+    alignContent: 'center',
   },
   name: {
-    fontSize: 18,
     fontWeight: 'bold',
   },
   club: {
-    fontSize: 14,
     color: '#666',
   },
   license: {
-    fontSize: 12,
     color: '#888',
     textAlign: 'right',
     position: 'absolute',
-    right: 16,
-    top: 16,
+    right: 2,
+    top: 2,
   },
   blockHeader: {
     flexDirection: 'row',

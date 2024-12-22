@@ -35,16 +35,18 @@ const CameraControl = (props: CameraControlProps) => {
         setIsRecording(true)
 
         const video = await cameraRef.current.recordAsync({
+          codec: 'jpeg',
           maxDuration: 5, // Durée max en secondes
         })
 
         // Sauvegarder dans la galerie si permission accordée
         if (mediaPermission) {
           console.log('Tentative enregistrement')
+          console.log('Video :', video)
           const uri = video?.uri as string
           console.log('Video uri :', uri)
-          //const result = await MediaLibrary.saveToLibraryAsync(uri) //Wait the fix
-          // console.log('Vidéo sauvegardée dans la galerie')
+          const result = await MediaLibrary.saveToLibraryAsync(uri) //Wait the fix
+          console.log('Vidéo sauvegardée dans la galerie :', result)
         } else {
           console.warn('Permission pour la galerie non accordée')
         }

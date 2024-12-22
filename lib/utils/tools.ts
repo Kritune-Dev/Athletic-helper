@@ -5,7 +5,7 @@
 import { Locales } from '../locales'
 
 type ToolRoute =
-  | '/utils/settings'
+  | '/utils/start'
   | '/utils/athleteSearch'
   | '/utils/sprintCalculator'
 
@@ -16,20 +16,20 @@ const Tools: {
   icon: string
 }[] = [
   {
-    title: Locales.t('settings.title'),
-    subtitle: Locales.t('settings.subtitle'),
-    route: '/utils/settings',
+    title: Locales.translate('settings.title'),
+    subtitle: Locales.translate('settings.subtitle'),
+    route: '/utils/start',
     icon: 'cog',
   },
   {
-    title: Locales.t('athleteSearch.title'),
-    subtitle: Locales.t('athleteSearch.subtitle'),
+    title: Locales.translate('athleteSearch.title'),
+    subtitle: Locales.translate('athleteSearch.subtitle'),
     route: '/utils/athleteSearch',
     icon: 'account-search',
   },
   {
-    title: Locales.t('sprintCalculator.title'),
-    subtitle: Locales.t('sprintCalculator.subtitle'),
+    title: Locales.translate('sprintCalculator.title'),
+    subtitle: Locales.translate('sprintCalculator.subtitle'),
     route: '/utils/sprintCalculator',
     icon: 'timer',
   },

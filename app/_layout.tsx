@@ -119,7 +119,7 @@ const RootLayoutNav = () => {
         >
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
-            name="utils/settings"
+            name="utils/start"
             options={{ title: Locales.t('settings.title') }}
           />
           <Stack.Screen
@@ -135,6 +135,8 @@ const RootLayoutNav = () => {
             options={{ title: Locales.t('titleFavorite') }}
           />
           <Stack.Screen name="views/editProfile" />
+          <Stack.Screen name="views/editLinks" />
+          <Stack.Screen name="views/license" />
           <Stack.Screen
             name="onboarding"
             options={{
