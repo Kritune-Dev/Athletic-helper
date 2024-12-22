@@ -13,13 +13,13 @@ export const getSettings = async (): Promise<Setting> => {
     const storedSettings = await AsyncStorage.getItem(SETTINGS_KEY)
     return storedSettings
       ? JSON.parse(storedSettings)
-      : { color: 'default', language: 'auto', theme: 'auto' }
+      : { color: 'default', language: 'fr', theme: 'auto' }
   } catch (error) {
     console.error(
       'Erreur lors de la récupération des paramètres utilisateur :',
       error,
     )
-    return { color: 'default', language: 'auto', theme: 'auto' }
+    return { color: 'default', language: 'fr', theme: 'auto' }
   }
 }
 
@@ -60,6 +60,7 @@ export const updateLanguage = async (language: Language): Promise<void> => {
   try {
     const settings = await getSettings()
     settings.language = language
+    console.log('Change language:', language)
     await saveSettings(settings)
   } catch (error) {
     console.error('Erreur lors de la mise à jour de la langue :', error)

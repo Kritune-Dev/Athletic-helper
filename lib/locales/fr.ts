@@ -44,7 +44,7 @@ const French = {
   settings: {
     title: 'Paramètres',
     subtitle: 'Gérez les paramètres de votre application.',
-    color: {
+    colors: {
       default: 'défaut',
       orange: 'orange',
       red: 'rouge',
@@ -57,6 +57,36 @@ const French = {
       lime: 'citron vert',
       olive: 'olive',
       brown: 'marron',
+    },
+    theme: {
+      title: 'Thème',
+      auto: 'Automatique',
+      light: 'Clair',
+      dark: 'Sombre',
+    },
+    color: {
+      title: 'Couleurs',
+      customize: 'Personnaliser les couleurs',
+    },
+    soundVibration: {
+      title: 'Son et Vibrations',
+      sound: 'Son',
+      vibration: 'Vibrations',
+    },
+    language: {
+      title: 'Langue',
+      label: 'Choisir la langue',
+      fr: 'Français',
+      en: 'Anglais',
+    },
+    dialogs: {
+      color: {
+        title: 'Choisir une couleur',
+        close: 'Fermer',
+      },
+    },
+    snackbar: {
+      themeError: 'Une erreur est survenue lors du changement de thème.',
     },
   },
   athleteSearch: {

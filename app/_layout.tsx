@@ -14,7 +14,7 @@ import { PaperProvider, adaptNavigationTheme } from 'react-native-paper'
 import { Locales, StackHeader, Themes } from '@/lib'
 
 // eslint-disable-next-line import/namespace
-import { ThemeProvider, useTheme } from './themeContext'
+import { ThemeProvider, useTheme } from '../lib/hooks/themeContext'
 
 export { ErrorBoundary } from 'expo-router'
 SplashScreen.preventAutoHideAsync()
@@ -67,10 +67,6 @@ const RootLayoutNav = () => {
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="settings"
-          options={{ title: Locales.t('titleSettings') }}
-        />
         <Stack.Screen
           name="favorite"
           options={{ title: Locales.t('titleFavorite') }}

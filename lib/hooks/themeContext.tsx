@@ -7,14 +7,17 @@ import {
   saveSettings,
   updateTheme,
   updateColor,
+  updateLanguage,
 } from '@/lib/services/settingsService'
 
 // Définir un type pour le contexte du thème
 interface ThemeContextProps {
   theme: ThemeType
   color: Color
+  language: Language
   setTheme: (theme: ThemeType) => void
   setColor: (color: Color) => void
+  setLanguage: (Language: Language) => void
 }
 
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined)
@@ -22,7 +25,7 @@ const ThemeContext = createContext<ThemeContextProps | undefined>(undefined)
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setTheme] = useState<ThemeType>('auto')
   const [color, setColor] = useState<Color>('default')
-  const [language] = useState<Language>('fr')
+  const [language, setLanguage] = useState<Language>('fr')
   const colorScheme = useColorScheme()
 
   // Charger les paramètres de thème depuis AsyncStorage
@@ -32,6 +35,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       if (settings) {
         setTheme(settings.theme || 'auto')
         setColor(settings.color || 'default')
+        setLanguage(settings.language || 'fr')
       }
     }
     loadSettings()
@@ -60,7 +64,12 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
   const handleSetColor = async (newColor: Color) => {
     setColor(newColor)
-    await updateColor(newColor as Color)
+    await updateColor(newColor)
+  }
+
+  const handleSetLanguage = async (newLanguage: Language) => {
+    setLanguage(newLanguage)
+    await updateLanguage(newLanguage)
   }
 
   return (
@@ -68,8 +77,10 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       value={{
         theme,
         color,
+        language,
         setTheme: handleSetTheme,
         setColor: handleSetColor,
+        setLanguage: handleSetLanguage,
       }}
     >
       {children}

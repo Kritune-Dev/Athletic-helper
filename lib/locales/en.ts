@@ -44,7 +44,7 @@ const English = {
   settings: {
     title: 'Settings',
     subtitle: 'Manage your application settings.',
-    color: {
+    colors: {
       default: 'default',
       orange: 'orange',
       red: 'red',
@@ -57,6 +57,36 @@ const English = {
       lime: 'lime',
       olive: 'olive',
       brown: 'brown',
+    },
+    theme: {
+      title: 'Theme',
+      auto: 'Auto',
+      light: 'Light',
+      dark: 'Dark',
+    },
+    color: {
+      title: 'Colors',
+      customize: 'Customize colors',
+    },
+    soundVibration: {
+      title: 'Sound & Vibrations',
+      sound: 'Sound',
+      vibration: 'Vibrations',
+    },
+    language: {
+      title: 'Language',
+      label: 'Choose language',
+      fr: 'French',
+      en: 'English',
+    },
+    dialogs: {
+      color: {
+        title: 'Choose a color',
+        close: 'Close',
+      },
+    },
+    snackbar: {
+      themeError: 'An error occurred while changing the theme.',
     },
   },
   athleteSearch: {
